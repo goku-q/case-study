@@ -1,0 +1,20 @@
+redis集群搭建
+
+方法一cluster：
+1、使用redis自带utils包中的createcluster工具快速搭建
+（1）./createcluster start
+	修改createcluster脚本中start部分代码：  添加--bind 0.0.0.0 --protected-mode no
+	 ../../src/redis-server --bind 0.0.0.0 --protected-mode no --port $PORT --cluster-enabled yes --cluster-config-file nodes-${PORT}.conf --cluster-node-timeout $TIMEOUT --appendonly yes --appendfilename appendonly-${PORT}.aof --dbfilename dump-${PORT}.rdb --logfile ${PORT}.log --daemonize yes
+（2）./createcluster create
+	修改createcluster脚本中create部分代码：
+	将HOSTS="$HOSTS 127.0.0.1:$PORT" 中ip地址改为redis服务器IP地址
+执行（1）、（2）则cluster集群搭建成功，createcluster脚本默认6个nodes（3个master、3个replicates）。
+
+方法二：sentinel
+1、正常启动一个master节点
+2、启动两个slave节点：与master区别是在配置文件中添加   slaveof ip(master的IP) port(master的端口)
+3、启动三个sentinel（命令：redis-sentinel sentinel.conf)
+	修改关键配置文件  sentinel monitor mymaster ip(master的IP) port(master的端口) 2(法定投票人数)
+
+注：
+以上两种方法可实现两种集群方式，更多的细节配置请参考官方文档
