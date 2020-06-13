@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace为mapper接口全限定名 -->
+<mapper namespace="spring_mybatis.mybatis.BankMapper">
+    <select id="getUser" parameterType="int" resultType="test">
+        SELECT id,name FROM test WHERE id =#{id}
+    </select>
+</mapper>
