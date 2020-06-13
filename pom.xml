@@ -7,5 +7,6 @@
   <modules>
   	<module>spring</module>
   	<module>juc</module>
+  	<module>redis</module>
   </modules>
 </project>
