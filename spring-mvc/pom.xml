@@ -6,4 +6,12 @@
     <version>0.0.1-SNAPSHOT</version>
   </parent>
   <artifactId>spring-mvc</artifactId>
+  <dependencies>
+
+  <dependency>
+  	<groupId>org.springframework</groupId>
+  	<artifactId>spring-webmvc</artifactId>
+  	<version>5.2.6.RELEASE</version>
+  </dependency>
+  </dependencies>
 </project>
