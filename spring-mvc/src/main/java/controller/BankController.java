@@ -11,4 +11,14 @@ public class BankController {
 	public String hello() {
 		return "hello";
 	}
+	
+	@RequestMapping("/go")
+	public String go() {
+		return "go";
+	}
+	
+	@RequestMapping("/bye")
+	public String bye() {
+		return "bye";
+	}
 }
