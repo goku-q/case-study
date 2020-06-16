@@ -9,5 +9,6 @@
   	<module>juc</module>
   	<module>redis</module>
   	<module>springmvc</module>
+  	<module>dubbo</module>
   </modules>
 </project>
