@@ -1,0 +1,18 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xmlns:context="http://www.springframework.org/schema/context"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd
+       http://www.springframework.org/schema/context
+       http://www.springframework.org/schema/context/spring-context-4.2.xsd">
+    <context:component-scan
+		base-package="service"></context:component-scan>
+    
+    <!-- 服务名称 -->
+    <dubbo:application name="demo-consumer"/>
+    <!-- 注册中心地址 -->
+    <dubbo:registry address="zookeeper://192.168.0.9:2181"/>
+    <!-- 声明需要调用的远程接口，生成远程服务代理 -->
+    <dubbo:reference id="userService" check="false" interface="service.UserService"/>
+</beans>
