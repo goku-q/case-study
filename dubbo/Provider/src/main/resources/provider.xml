@@ -1,0 +1,17 @@
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+       xmlns="http://www.springframework.org/schema/beans"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
+       
+     <!-- 服务器名称 -->
+    <dubbo:application name="demo-provider"/>
+    <!-- 配置注册中心，使用zookeeper -->
+    <dubbo:registry address="zookeeper://192.168.0.9:2181"/>
+    <!-- 通信协议及端口号 -->
+    <dubbo:protocol name="dubbo" port="20890"/>
+    <!-- 将暴露接口的具体实现，注入容器 -->
+    <bean id="userService" class="service.UserServiceImpl"/>
+    <!-- 暴露接口，并配置具体引入的实现类 -->
+    <dubbo:service interface="service.UserService" ref="userService"/>
+</beans>
