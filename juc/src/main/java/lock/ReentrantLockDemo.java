@@ -10,7 +10,7 @@ import java.util.concurrent.locks.ReentrantLock;
 public class ReentrantLockDemo implements Runnable{
 	ReentrantLock lock = new ReentrantLock();
 	static int num = 10;//共享资源
-    //用法一：同步方法（锁的是对象）
+    
     private void sync(){
     	lock.lock();
         while (num>0)
