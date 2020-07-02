@@ -1,17 +1,41 @@
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
-       xmlns="http://www.springframework.org/schema/beans"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
        http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd">
-       
-     <!-- 服务器名称 -->
-    <dubbo:application name="demo-provider"/>
-    <!-- 配置注册中心，使用zookeeper -->
-    <dubbo:registry address="zookeeper://192.168.0.9:2181"/>
-    <!-- 通信协议及端口号 -->
-    <dubbo:protocol name="dubbo" port="20890"/>
-    <!-- 将暴露接口的具体实现，注入容器 -->
-    <bean id="userService" class="service.UserServiceImpl"/>
-    <!-- 暴露接口，并配置具体引入的实现类 -->
-    <dubbo:service interface="service.UserService" ref="userService"/>
+
+	<context:component-scan base-package="goku"></context:component-scan>
+	<tx:annotation-driven />
+
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="url" value="jdbc:mysql://192.168.0.9:3306/goku_2" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="username" value="root" />
+		<property name="password" value="123321" />
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliases" value="goku.pojo.City" />
+	</bean>
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="goku.dao" />
+	</bean>
+
+	<!-- 服务器名称 -->
+	<!-- <dubbo:application name="demo-provider" /> -->
+	<!-- 配置注册中心，使用zookeeper -->
+	<!-- <dubbo:registry address="zookeeper://192.168.0.9:2181" /> -->
+	<!-- 通信协议及端口号 -->
+	<!-- <dubbo:protocol name="dubbo" port="20890" /> -->
+	<!-- 将暴露接口的具体实现，注入容器 -->
+	<!-- <bean id="cityServiceImpl" class="goku.service.CityServiceImpl" /> -->
+	<!-- 暴露接口，并配置具体引入的实现类 -->
+	<!-- <dubbo:service interface="goku.service.CityService" ref="cityServiceImpl" /> -->
 </beans>

@@ -1,18 +1,49 @@
-<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-       xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
-       xmlns="http://www.springframework.org/schema/beans"
-       xmlns:context="http://www.springframework.org/schema/context"
-       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
-       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd
-       http://www.springframework.org/schema/context
-       http://www.springframework.org/schema/context/spring-context-4.2.xsd">
-    <context:component-scan
-		base-package="service"></context:component-scan>
-    
-    <!-- 服务名称 -->
-    <dubbo:application name="demo-consumer"/>
-    <!-- 注册中心地址 -->
-    <dubbo:registry address="zookeeper://192.168.0.9:2181"/>
-    <!-- 声明需要调用的远程接口，生成远程服务代理 -->
-    <dubbo:reference id="userService" check="false" interface="service.UserService"/>
+<beans xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:dubbo="http://dubbo.apache.org/schema/dubbo"
+	xmlns="http://www.springframework.org/schema/beans" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:task="http://www.springframework.org/schema/task"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/tx https://www.springframework.org/schema/tx/spring-tx.xsd 
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.2.xsd
+       http://dubbo.apache.org/schema/dubbo http://dubbo.apache.org/schema/dubbo/dubbo.xsd 
+       http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task-4.1.xsd">
+	<context:component-scan base-package="goku"></context:component-scan>
+	<tx:annotation-driven />
+	<!-- 开启task驱动 -->
+	<task:annotation-driven/>
+
+	<!-- 数据源 -->
+	<bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource">
+		<property name="url" value="jdbc:mysql://192.168.0.9:3306/goku_1" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
+		<property name="username" value="root" />
+		<property name="password" value="123321" />
+	</bean>
+	<!-- 配置事务管理 -->
+	<bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource"></property>
+	</bean>
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"></property>
+		<property name="typeAliases">
+			<list>
+				<value>goku.pojo.User</value>
+				<value>goku.pojo.Task</value>
+				<value>goku.pojo.TaskHis</value>
+			</list>
+		</property>
+	</bean>
+	<bean id="tx" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+	<bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+		<property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+		<property name="basePackage" value="goku.dao" />
+	</bean>
+	<!-- 服务名称 -->
+	<!-- <dubbo:application name="demo-consumer" /> -->
+	<!-- 注册中心地址 -->
+	<!-- <dubbo:registry address="zookeeper://192.168.0.9:2181" /> -->
+	<!-- 声明需要调用的远程接口，生成远程服务代理 -->
+	<!-- <dubbo:reference id="cityService" check="false" interface="goku.service.CityService" /> -->
+
 </beans>
