@@ -17,6 +17,7 @@ import com.rabbitmq.client.Consumer;
 import com.rabbitmq.client.ConsumerShutdownSignalCallback;
 import com.rabbitmq.client.DefaultConsumer;
 import com.rabbitmq.client.DeliverCallback;
+import com.rabbitmq.client.Envelope;
 import com.rabbitmq.client.GetResponse;
 import com.rabbitmq.client.Method;
 import com.rabbitmq.client.ReturnCallback;
@@ -33,6 +34,8 @@ import com.rabbitmq.client.AMQP.Exchange.UnbindOk;
 import com.rabbitmq.client.AMQP.Queue.PurgeOk;
 import com.rabbitmq.client.AMQP.Tx.CommitOk;
 import com.rabbitmq.client.AMQP.Tx.RollbackOk;
+import com.sun.org.apache.bcel.internal.generic.NEW;
+import com.sun.org.apache.xml.internal.security.Init;
 /**
  * 测试rabbitmq使用
  * @author tmac-q
@@ -62,8 +65,29 @@ public class MqConnectionFactory {
 	
 	
 	public static void main(String[] args) throws IOException, TimeoutException {
-		Connection connection2 = MqConnectionFactory.getConnection();
-		Channel channel = connection2.createChannel();
+		Connection con = MqConnectionFactory.getConnection();
+		Channel channel = con.createChannel();
+		channel.queueDeclare("queue_user", true, false, false, null);
+		channel.exchangeDeclare("user", BuiltinExchangeType.TOPIC,true);
+		channel.queueBind("queue_user", "user", "test");
+		/*while (true) {
+			channel.basicPublish("user", "test", false, null, "15615".getBytes());
+		}*/
+		
+		DefaultConsumer consumer = new DefaultConsumer(channel) {
+		
+			@Override
+			public void handleDelivery(String consumerTag, Envelope envelope, BasicProperties properties, byte[] body)
+					throws IOException {
+				System.out.println(new String(body));
+				//try {Thread.sleep(200);} catch (InterruptedException e) {  e.printStackTrace(); }
+				System.out.println("**************"+envelope.getDeliveryTag()+","+envelope.getExchange());
+				channel.basicAck(envelope.getDeliveryTag(), false);
+			}
+			
+		};
+		channel.basicConsume("queue_user", consumer);
+		
 	}
 
 }
