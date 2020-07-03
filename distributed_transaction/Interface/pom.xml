@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<parent>
 		<groupId>goku-q.case-study</groupId>
-		<artifactId>dubbo</artifactId>
+		<artifactId>distributed_tansaction</artifactId>
 		<version>0.0.1-SNAPSHOT</version>
 	</parent>
 	<artifactId>Interface</artifactId>
