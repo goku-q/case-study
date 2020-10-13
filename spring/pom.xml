@@ -29,7 +29,7 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
+			<version>4.13.1</version>
 		</dependency>
 		<!-- 第三方动态代理，spring aop无接口实现时会使用的代理模式，有接口实现使用jdk提供的类库实现动态代理 -->
 		<dependency>
